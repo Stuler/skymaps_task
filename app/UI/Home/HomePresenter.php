@@ -20,9 +20,10 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	public EmployeeDataManager $employeeDM;
 
 	#[Persistent]
-	public int $companyId;
+	public ?int $companyId = null;
 
 	public function renderDefault(): void {
+		$this->companyId = null;
 		$companies = $this->companyDM->getAllCompanies();
 		$this->template->companies = $companies;
 	}
@@ -34,10 +35,13 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 			$hierarchy = $this->employeeDM->getEmployeesHierarchyByCompanyId($this->companyId);
 			$this->template->companyId = $companyId;
 			$this->template->hierarchy = $hierarchy;
+		} else {
+			$this->companyId = null;
 		}
 	}
 
 	public function renderEditEmployee(?int $employeeId): void {
+		$this->template->companyId = $this->companyId;
 		$this['formEmployee']->setDefaults($this->employeeDM->getDefaults($employeeId, $this->companyId));
 	}
 
@@ -53,13 +57,11 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	}
 
 	public function formCompanySucceeded(\stdClass $values): void {
-		 try {
+
 			$id = $this->companyDM->save($values);
 			$this->flashMessage('Company was saved.', 'ok');
 			$this->redirect('Home:editCompany', ['companyId' => $id]);
-		} catch (\Exception $e) {
-			$this->flashMessage($e->getMessage(), 'err');
-		}
+
 	}
 
 	public function createComponentFormEmployee(): Form {
@@ -69,7 +71,7 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		$form->addHidden('company_id');
 		$form->addText('name', 'Employee name:')
 			->setRequired('Please enter employee name');
-		$form->addSelect('manager_id', 'Manager:', $this->employeeDM->getEmployeesForSelect())
+		$form->addSelect('manager_id', 'Manager:', $this->employeeDM->getEmployeesForSelect($this->companyId))
 			->setPrompt('Select manager');
 		$form->addCheckbox('is_ceo', 'CEO');
 		$form->addText("phone_number", "Phone number:")
@@ -87,6 +89,27 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 			$this->redirect('editCompany', ['companyId' => $this->companyId]);
 		} catch (\Exception $e) {
 			$this->flashMessage($e->getMessage(), 'err');
+		}
+	}
+
+	public function handleDeleteCompany(int $id): void {
+		try {
+			$this->companyDM->delete($id);
+			$this->flashMessage('Company was deleted.', 'ok');
+			$this->redirect('Home:');
+		} catch (\Exception $e) {
+			$this->flashMessage($e->getMessage(), 'err');
+		}
+
+	}
+
+	public function handleDeleteEmployee(int $id): void {
+		try {
+			$this->employeeDM->delete($id);
+			$this->flashMessage('Employee was deleted.', 'ok');
+			$this->redirect('Home:editCompany', ['companyId' => $this->companyId]);
+		} catch (\PDOException $e) { // todo implement
+			$this->flashMessage('Employee cannot be deleted because it is a manager of another employee.', 'err');
 		}
 	}
 

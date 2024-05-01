@@ -46,8 +46,10 @@ class EmployeeDataManager {
 		];
 	}
 
-	public function getEmployeesForSelect(): array {
-		return $this->employeeRepository->findAll()->fetchPairs('id', 'name');
+	public function getEmployeesForSelect(int $companyId): array {
+		return $this->employeeRepository->findAll()
+				->where("company_id", $companyId)
+				->fetchPairs('id', 'name');
 	}
 
 	public function getEmployeesHierarchyByCompanyId(int $companyId): array {
@@ -63,6 +65,9 @@ class EmployeeDataManager {
 	private function validateCeo($values) {
 		if ($values->is_ceo && $values->manager_id) {
 			throw new \Exception('CEO cannot have a manager.');
+		}
+		if (!$values->is_ceo && !$values->manager_id) {
+			throw new \Exception('Employee must have a manager.');
 		}
 		if ($values->is_ceo) {
 			$ceo = $this->employeeRepository->findAll()
@@ -115,5 +120,7 @@ class EmployeeDataManager {
 		return $branch;
 	}
 
-
+	public function delete(int $id): void {
+		$this->employeeRepository->delete($id);
+	}
 }

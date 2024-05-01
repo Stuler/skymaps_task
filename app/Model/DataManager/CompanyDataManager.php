@@ -37,4 +37,8 @@ class CompanyDataManager {
 	public function getAllCompanies(): Selection {
 		return $this->companyRepository->findAll();
 	}
+
+	public function delete(int $id): void {
+		$this->companyRepository->delete($id);
+	}
 }

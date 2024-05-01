@@ -6,7 +6,7 @@
 			<ul>
 				{foreach $hierarchy as $employee}
 					<li>
-						{$employee['name']}
+						<a n:href="editEmployee employeeId => $employee['id']">{$employee['name']}</a> <a class="ajax" n:href="deleteEmployee! id => $employee['id']">X</a>
                         {if isset($employee['subordinates'])}
 							{include 'subordinates.latte', subordinates => $employee['subordinates']}
 						{/if}
