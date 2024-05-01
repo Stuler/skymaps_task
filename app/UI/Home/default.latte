@@ -12,20 +12,3 @@
 		</ul>
 	{/if}
 {/block}
-
-
-<script>
-
-	document.addEventListener('DOMContentLoaded', function() {
-		var phoneNumberInput = document.getElementById('frm-formEmployee-phone_number');
-		phoneNumberInput.addEventListener('blur', function() {
-			var phoneNumber = phoneNumberInput.value;
-			var phoneNumberRegex = new RegExp('^(\+421 \\d{3} \\d{3} \\d{3}|\+421\\d{9}|\d{9})$');
-
-			if (!phoneNumberRegex.test(phoneNumber)) {
-				alert('Phone number must be in the format: +421 xxx xxx xxx, +421xxxxxxxxx or without +421');
-				phoneNumberInput.focus();
-			}
-		});
-	});
-</script>
