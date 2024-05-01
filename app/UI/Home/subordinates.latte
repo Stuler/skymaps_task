@@ -1,0 +1,10 @@
+<ul>
+	{foreach $subordinates as $subordinate}
+		<li>
+			{$subordinate['name']}
+            {if isset($subordinate['subordinates'])}
+				{include 'subordinates.latte', subordinates => $subordinate['subordinates']}
+			{/if}
+		</li>
+	{/foreach}
+</ul>

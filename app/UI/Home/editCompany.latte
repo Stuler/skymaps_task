@@ -1,0 +1,20 @@
+{block content}
+	{control formCompany}
+	{ifset $companyId}
+		<a n:href="editEmployee">Add employee</a>
+		{ifset $hierarchy}
+			<ul>
+				{foreach $hierarchy as $employee}
+					<li>
+						{$employee['name']}
+                        {if isset($employee['subordinates'])}
+							{include 'subordinates.latte', subordinates => $employee['subordinates']}
+						{/if}
+					</li>
+				{/foreach}
+			</ul>
+		{else}
+			<p>No employees found.</p>
+		{/ifset}
+	{/ifset}
+{/block}

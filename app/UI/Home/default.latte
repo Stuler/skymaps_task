@@ -1,0 +1,16 @@
+{block content}
+	<h1>Companies</h1>
+	<span>
+		<a n:href="editCompany">Add new company</a>
+	</span>
+	{dump $companies}
+	{if $companies}
+		<ul>
+		{foreach $companies as $company}
+			<li><a n:href="editCompany companyId => $company->id">{$company->name}</a></li>
+		{/foreach}
+		</ul>
+	{/if}
+{/block}
+
+

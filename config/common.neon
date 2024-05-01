@@ -1,0 +1,31 @@
+parameters:
+
+
+application:
+	errorPresenter:
+		4xx: Error:Error4xx
+		5xx: Error:Error5xx
+	mapping: App\UI\*\**Presenter
+
+search:
+	section:
+		in: %appDir%/Model
+		classes:
+			- *Repository
+			- *DataManager
+		tags:
+			- nette.inject
+
+
+latte:
+	strictTypes: yes
+
+
+session:
+	expiration: 14 days
+
+
+di:
+	export:
+		parameters: no
+		tags: no
