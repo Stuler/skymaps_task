@@ -4,17 +4,16 @@ namespace App\Model\DataManager;
 
 use App\Model\Repository\EmployeeRepository;
 use App\Model\TDO\TDbEmployee;
-use Nette\Database\Table\Selection;
-use Nette\DI\Attributes\Inject;
 
 class EmployeeDataManager {
 
 	public function __construct(
-		private EmployeeRepository $employeeRepository
+		private readonly EmployeeRepository $employeeRepository
 	) {
 	}
 
 	/**
+	 * Saves the employee to the database.
 	 * @throws \Exception
 	 */
 	public function save(\stdClass $values): int {
@@ -28,6 +27,9 @@ class EmployeeDataManager {
 		return $this->employeeRepository->save($saveValues);
 	}
 
+	/**
+	 * Returns the default values for the employee form.
+	 */
 	public function getDefaults(?int $employeeId, ?int $companyId): array {
 		/** @var TDbEmployee $employee */
 		$employee = $this->employeeRepository->fetchById($employeeId);
@@ -46,15 +48,25 @@ class EmployeeDataManager {
 		];
 	}
 
+	/**
+	 * Returns all employees from the database in format: id => name.
+	 */
 	public function getEmployeesForSelect(int $companyId): array {
 		return $this->employeeRepository->findAll()
 				->where("company_id", $companyId)
 				->fetchPairs('id', 'name');
 	}
 
+	/**
+	 * Returns the employees hierarchy for the company.
+	 * @param int $companyId
+	 * @return array
+	 */
 	public function getEmployeesHierarchyByCompanyId(int $companyId): array {
-		$employees = $this->employeeRepository->findAll()->select('*')->where('company_id', $companyId)->fetchAssoc('[]');
-		// create employees hierarchy: there is only with 1 ceo with no manager
+		$employees = $this->employeeRepository->findAll()
+				->select('*')
+				->where('company_id', $companyId)
+				->fetchAssoc('[]');
 		return $this->createHierarchy($employees);
 	}
 
@@ -67,7 +79,7 @@ class EmployeeDataManager {
 			throw new \Exception('CEO cannot have a manager.');
 		}
 		if (!$values->is_ceo && !$values->manager_id) {
-			throw new \Exception('Employee must have a manager.');
+			throw new \Exception('Employee must have a manager or must be marked as "CEO".');
 		}
 		if ($values->is_ceo) {
 			$ceo = $this->employeeRepository->findAll()

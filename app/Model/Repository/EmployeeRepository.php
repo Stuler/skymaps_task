@@ -15,4 +15,13 @@ class EmployeeRepository extends AbstractRepository {
 		return parent::save($values);
 	}
 
+	/**
+	 * Delete all employees by company id.
+	 */
+	public function deleteByCompanyId(int $id): void {
+		$this->db->table($this->table)
+				->where('company_id', $id)
+				->delete();
+	}
+
 }

@@ -1,4 +1,5 @@
 {block content}
+	<a n:href="Home:default">All companies</a>
 	{control formCompany}
 	{ifset $companyId}
 		<a n:href="editEmployee">Add employee</a>
@@ -6,7 +7,7 @@
 			<ul>
 				{foreach $hierarchy as $employee}
 					<li>
-						<a n:href="editEmployee employeeId => $employee['id']">{$employee['name']}</a> <a class="ajax" n:href="deleteEmployee! id => $employee['id']">X</a>
+						<a n:href="editEmployee employeeId => $employee['id']">{$employee['name']}</a> <a class="ajax" n:href="deleteEmployee! id => $employee['id']"><i class="fas fa-trash"></i></a>
                         {if isset($employee['subordinates'])}
 							{include 'subordinates.latte', subordinates => $employee['subordinates']}
 						{/if}

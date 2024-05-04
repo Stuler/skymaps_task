@@ -41,7 +41,9 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	}
 
 	public function renderEditEmployee(?int $employeeId): void {
+		$company = $this->companyDM->getCompanyById($this->companyId);
 		$this->template->companyId = $this->companyId;
+		$this->template->companyName = $company->name;
 		$this['formEmployee']->setDefaults($this->employeeDM->getDefaults($employeeId, $this->companyId));
 	}
 
@@ -57,10 +59,9 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	}
 
 	public function formCompanySucceeded(\stdClass $values): void {
-
-			$id = $this->companyDM->save($values);
-			$this->flashMessage('Company was saved.', 'ok');
-			$this->redirect('Home:editCompany', ['companyId' => $id]);
+		$id = $this->companyDM->save($values);
+		$this->flashMessage('Company was saved.', 'ok');
+		$this->redirect('Home:editCompany', ['companyId' => $id]);
 
 	}
 
@@ -100,7 +101,6 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		} catch (\Exception $e) {
 			$this->flashMessage($e->getMessage(), 'err');
 		}
-
 	}
 
 	public function handleDeleteEmployee(int $id): void {

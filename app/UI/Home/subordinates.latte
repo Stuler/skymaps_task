@@ -1,7 +1,7 @@
 <ul>
 	{foreach $subordinates as $subordinate}
 		<li>
-			<a n:href="editEmployee employeeId => $subordinate['id']">{$subordinate['name']}</a> <a class="ajax" n:href="deleteEmployee! id => $subordinate['id']">X</a>
+			<a n:href="editEmployee employeeId => $subordinate['id']">{$subordinate['name']}</a> <a class="ajax" n:href="deleteEmployee! id => $subordinate['id']"><i class="fas fa-trash"></i></a>
             {if isset($subordinate['subordinates'])}
 				{include 'subordinates.latte', subordinates => $subordinate['subordinates']}
 			{/if}

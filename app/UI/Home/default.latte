@@ -1,5 +1,10 @@
 {block content}
-	<h1>Companies</h1>
+	<div class="row">
+		<div class="col">
+			<h1>Companies</h1>
+		</div>
+	</div>
+
 	<span>
 		<a n:href="editCompany">Add new company</a>
 	</span>
@@ -7,7 +12,7 @@
 	{if $companies}
 		<ul>
 		{foreach $companies as $company}
-			<li><a n:href="editCompany companyId => $company->id">{$company->name}</a> <a n:href="deleteCompany! id=>$company->id">X</a></li>
+			<li><a n:href="editCompany companyId => $company->id">{$company->name}</a> <a n:href="deleteCompany! id=>$company->id"><i class="fas fa-trash"></i></a></li>
 		{/foreach}
 		</ul>
 	{/if}

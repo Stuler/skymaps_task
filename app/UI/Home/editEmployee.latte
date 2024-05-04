@@ -1,5 +1,6 @@
 {block content}
-	<a n:href=":editCompany companyId => $companyId">Edit Company</a>
+	<a n:href="Home:default">All companies</a>
+	<a n:href=":editCompany companyId => $companyId"> {$companyName} </a>
 	{control formEmployee}
 {/block}
 
