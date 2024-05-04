@@ -1,0 +1,5 @@
+parameters:
+database:
+	dsn: 'mysql:host=127.0.0.1;dbname=skymaps'
+	user: root
+	password: root
